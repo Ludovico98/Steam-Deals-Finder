@@ -2,6 +2,9 @@
 
 A Python desktop application that searches for Steam game deals and sends automated email notifications when new discounts are available. Features a modern GUI built with CustomTkinter, intelligent duplicate detection, and daily scheduled searches.
 
+<img width="1147" height="1005" alt="image" src="https://github.com/user-attachments/assets/2c0b5a74-f57c-4ad4-bee7-9269ed13cce7" />
+
+
 ![Python](https://img.shields.io/badge/python-3.8+-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 
@@ -124,13 +127,13 @@ To send emails, you need a Gmail App Password (NOT your regular Gmail password).
 ### Windows
 ```cmd
 cd Steam-Deals-Finder\SteamEmailSender\scripts
-python UISteamSearch.py
+python UISteamSearch
 ```
 
 ### macOS/Linux
 ```bash
 cd Steam-Deals-Finder/SteamEmailSender/scripts
-python3 UISteamSearch.py
+python3 UISteamSearch
 ```
 
 ## Usage Guide 📖
@@ -164,7 +167,7 @@ Steam-Deals-Finder/
 │   ├── Records/
 │   │   └── RecordsGamesEmails     # JSON tracking file (auto-created)
 │   └── scripts/
-│       ├── UISteamSearch.py       # Main UI application
+│       ├── UISteamSearch          # Main UI application
 │       └── steam_search.py        # Steam scraping logic
 └── README                         # This file
 ```
