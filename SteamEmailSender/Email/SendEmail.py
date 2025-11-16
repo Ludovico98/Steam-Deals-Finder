@@ -6,7 +6,7 @@ import os
 
 def load_recorded_games():
     """Load previously recorded games from Records/RecordsGamesEmails file"""
-    records_file = os.path.join(os.path.dirname(__file__), '..', '..', 'Records', 'RecordsGamesEmails')
+    records_file = os.path.join(os.path.dirname(__file__), '..', 'Records', 'RecordsGamesEmails')
     try:
         if os.path.exists(records_file) and os.path.getsize(records_file) > 0:
             with open(records_file, 'r') as f:
@@ -18,7 +18,7 @@ def load_recorded_games():
 
 def save_recorded_games(records):
     """Save recorded games to Records/RecordsGamesEmails file"""
-    records_file = os.path.join(os.path.dirname(__file__), '..', '..', 'Records', 'RecordsGamesEmails')
+    records_file = os.path.join(os.path.dirname(__file__), '..', 'Records', 'RecordsGamesEmails')
     try:
         with open(records_file, 'w') as f:
             json.dump(records, f, indent=2)
@@ -43,6 +43,7 @@ def filter_new_deals(games_list, recipient_emails=None):
             recorded_games[category] = {}
         
         new_deals = []
+        updated = False
         for game in games_list:
             game_title = game['title']
             game_discount = game['discount']
@@ -60,15 +61,18 @@ def filter_new_deals(games_list, recipient_emails=None):
                 'discount': game_discount,
                 'url': game['url']
             }
+            updated = True
         
-        # Save updated records
-        save_recorded_games(recorded_games)
+        # Save updated records only if there were changes
+        if updated:
+            save_recorded_games(recorded_games)
         
         # Return empty dict since no emails to send
         return {}
     else:
         # Has email recipients - check each recipient separately
         recipient_new_deals = {}
+        updated = False
         
         for recipient_email in recipient_emails:
             # Ensure category exists for this email
@@ -88,18 +92,20 @@ def filter_new_deals(games_list, recipient_emails=None):
                 # New game or changed discount for this recipient
                 new_deals.append(game)
                 
-                # Update records for this recipient
+                # Update records for this recipient (only for new/changed deals)
                 recorded_games[recipient_email][game_title] = {
                     'discount': game_discount,
                     'url': game['url']
                 }
+                updated = True
             
             # Store new deals for this recipient
             if new_deals:
                 recipient_new_deals[recipient_email] = new_deals
         
-        # Save updated records
-        save_recorded_games(recorded_games)
+        # Save updated records only if there were changes
+        if updated:
+            save_recorded_games(recorded_games)
         
         return recipient_new_deals
 
