@@ -2,6 +2,8 @@
 
 A Python desktop application that searches for Steam game deals and sends automated email notifications when new discounts are available. Features a modern GUI built with CustomTkinter, intelligent duplicate detection, and daily scheduled searches.
 
+<img width="1175" height="993" alt="image" src="https://github.com/user-attachments/assets/aecd26f7-c2a8-4249-b1fd-82c9feac22d9" />
+
 ![Python](https://img.shields.io/badge/python-3.8+-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 
