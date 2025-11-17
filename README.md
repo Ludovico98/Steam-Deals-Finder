@@ -225,6 +225,7 @@ Potential improvements for future versions:
 - Database storage instead of JSON
 - Steam API integration (more reliable than web scraping)
 - HTML email templates with images
+- Adding a pubsub
 
 ## Contributing 🤝
 
