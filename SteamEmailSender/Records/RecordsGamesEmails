@@ -1,2 +1,20 @@
 {
+  "No email search": {
+    "Sid Meier\u2019s Civilization\u00ae VI": {
+      "discount": 90,
+      "url": "https://store.steampowered.com/app/289070/Sid_Meiers_Civilization_VI/?snr=1_7_7_2300_150_1"
+    },
+    "Black Desert": {
+      "discount": 90,
+      "url": "https://store.steampowered.com/app/582660/Black_Desert/?snr=1_7_7_2300_150_1"
+    },
+    "Worms W.M.D": {
+      "discount": 85,
+      "url": "https://store.steampowered.com/app/327030/Worms_WMD/?snr=1_7_7_2300_150_1"
+    },
+    "Worms Armageddon": {
+      "discount": 85,
+      "url": "https://store.steampowered.com/app/217200/Worms_Armageddon/?snr=1_7_7_2300_150_1"
+    }
+  }
 }

@@ -20,6 +20,10 @@ class SteamDealsUI:
         self.root.geometry("1000x800")
         self.root.title("Steam Deals Finder")
         
+        # Configure root window to be resizable
+        self.root.rowconfigure(0, weight=1)
+        self.root.columnconfigure(0, weight=1)
+
         self.searcher = SteamSearcher()
         self.min_discount = 0
         self.search_results = []
@@ -53,29 +57,38 @@ class SteamDealsUI:
         self.root.bind_all("<Button-5>", lambda e: _on_mousewheel(type('obj', (object,), {'delta': -120, 'widget': e.widget, 'x_root': e.x_root, 'y_root': e.y_root})()))  # Linux scroll down
     
     def setup_ui(self):
-        # Main frame
+        # Main frame - use grid for better control
         main_frame = customtkinter.CTkFrame(master=self.root)
-        main_frame.pack(pady=20, padx=20, fill="both", expand=True)
-        
+        main_frame.grid(row=0, column=0, pady=20, padx=20, sticky="nsew")
+        main_frame.rowconfigure(2, weight=1)  # Controls frame expands
+        main_frame.columnconfigure(0, weight=1)
+
         # Title
         title_label = customtkinter.CTkLabel(
             master=main_frame, 
             text="Steam Deals Finder", 
             font=("Arial", 32, "bold")
         )
-        title_label.pack(pady=20, padx=30)
-        
+        title_label.grid(row=0, column=0, pady=20, padx=30, sticky="ew")
+
         # Controls frame
         controls_frame = customtkinter.CTkFrame(master=main_frame)
-        controls_frame.pack(pady=10, padx=20, fill="x")
-        
+        controls_frame.grid(row=2, column=0, pady=10, padx=20, sticky="nsew")
+        controls_frame.rowconfigure(0, weight=1)
+        controls_frame.columnconfigure(0, weight=1)
+        controls_frame.columnconfigure(1, weight=1)
+
         # Create two columns: left for controls, right for scheduler
         left_controls = customtkinter.CTkFrame(master=controls_frame)
-        left_controls.pack(side="left", padx=20, fill="both", expand=True)
-        
+        left_controls.grid(row=0, column=0, padx=(0, 10), sticky="nsew")
+        left_controls.rowconfigure(4, weight=1)  # Results frame expands (row 4, not row 3)
+        left_controls.columnconfigure(0, weight=1)
+
         right_scheduler = customtkinter.CTkFrame(master=controls_frame)
-        right_scheduler.pack(side="right", padx=20, fill="both", expand=True)
-        
+        right_scheduler.grid(row=0, column=1, padx=(10, 0), sticky="nsew")
+        right_scheduler.rowconfigure(2, weight=1)  # Email list frame expands
+        right_scheduler.columnconfigure(0, weight=1)
+
         # === LEFT SIDE - Main Controls ===
         
         # Discount slider section
@@ -84,18 +97,17 @@ class SteamDealsUI:
             text="Minimum Discount Percentage:", 
             font=("Arial", 16)
         )
-        discount_label.pack(pady=(10, 5))
-        
+        discount_label.grid(row=0, column=0, pady=(10, 5), padx=10, sticky="ew")
+
         self.discount_slider = customtkinter.CTkSlider(
             master=left_controls,
             from_=0,
             to=100,
             number_of_steps=20,
             command=self.update_discount_value,
-            width=400,
             height=20
         )
-        self.discount_slider.pack(pady=5)
+        self.discount_slider.grid(row=1, column=0, pady=5, padx=20, sticky="ew")
         self.discount_slider.set(0)
         
         self.discount_value_label = customtkinter.CTkLabel(
@@ -103,67 +115,67 @@ class SteamDealsUI:
             text="0%",
             font=("Arial", 16, "bold")
         )
-        self.discount_value_label.pack(pady=(5, 15))
-        
+        self.discount_value_label.grid(row=2, column=0, pady=(5, 15), sticky="ew")
+
         # Search and Send button
         self.search_send_button = customtkinter.CTkButton(
             master=left_controls,
             text="🔍📧 Search & Send Email",
             command=self.search_and_send_email,
-            width=250,
             height=50,
             font=("Arial", 18, "bold"),
             fg_color="#FF6B35"
         )
-        self.search_send_button.pack(pady=15)
-        
+        self.search_send_button.grid(row=3, column=0, pady=15, padx=20, sticky="ew")
+
         # Results frame with scrollbar (inside left_controls)
         self.results_frame = customtkinter.CTkScrollableFrame(
             master=left_controls,
             label_text="Search Results"
         )
-        self.results_frame.pack(pady=10, padx=10, fill="both", expand=True)
-        
+        self.results_frame.grid(row=4, column=0, pady=10, padx=10, sticky="nsew")
+
         # === RIGHT SIDE - Scheduler ===
         scheduler_title = customtkinter.CTkLabel(
             master=right_scheduler,
             text="⏰ Schedule Auto Send",
             font=("Arial", 20, "bold")
         )
-        scheduler_title.pack(pady=(10, 15))
-        
+        scheduler_title.grid(row=0, column=0, pady=(10, 15), padx=10, sticky="ew")
+
         # Email credentials section
         credentials_section = customtkinter.CTkFrame(master=right_scheduler)
-        credentials_section.pack(pady=10, padx=10, fill="x")
-        
+        credentials_section.grid(row=1, column=0, pady=10, padx=10, sticky="ew")
+        credentials_section.columnconfigure(0, weight=1)
+
         credentials_title = customtkinter.CTkLabel(
             master=credentials_section,
             text="🔐 Sender Email Credentials",
             font=("Arial", 14, "bold")
         )
-        credentials_title.pack(pady=(5, 5))
-        
+        credentials_title.grid(row=0, column=0, pady=(5, 5), sticky="ew")
+
         # Sender email input
         self.sender_email_entry = customtkinter.CTkEntry(
             master=credentials_section,
             placeholder_text="Sender email address",
-            width=200,
             font=("Arial", 11)
         )
-        self.sender_email_entry.pack(pady=3, padx=5, fill="x")
-        
+        self.sender_email_entry.grid(row=1, column=0, pady=3, padx=5, sticky="ew")
+
         # Sender password input with toggle visibility button
         password_frame = customtkinter.CTkFrame(master=credentials_section)
-        password_frame.pack(pady=3, padx=5, fill="x")
-        
+        password_frame.grid(row=2, column=0, pady=3, padx=5, sticky="ew")
+        password_frame.columnconfigure(0, weight=1)
+
         self.sender_password_entry = customtkinter.CTkEntry(
             master=password_frame,
             placeholder_text="App password (not regular password)",
             font=("Arial", 11),
             show="•"
         )
-        self.sender_password_entry.pack(side="left", fill="x", expand=True, padx=(0, 5))
-        
+        self.sender_password_entry.grid(row=0, column=0, padx=(0, 5), sticky="ew")
+
         self.password_visible = False
         self.toggle_password_button = customtkinter.CTkButton(
             master=password_frame,
@@ -173,31 +185,33 @@ class SteamDealsUI:
             height=28,
             font=("Arial", 14)
         )
-        self.toggle_password_button.pack(side="left")
-        
+        self.toggle_password_button.grid(row=0, column=1, sticky="e")
+
         # Email recipients section
         email_section = customtkinter.CTkFrame(master=right_scheduler)
-        email_section.pack(pady=10, padx=10, fill="x")
-        
+        email_section.grid(row=2, column=0, pady=10, padx=10, sticky="nsew")
+        email_section.rowconfigure(2, weight=1)  # Email list expands
+        email_section.columnconfigure(0, weight=1)
+
         email_title = customtkinter.CTkLabel(
             master=email_section,
             text="📧 Email Recipients",
             font=("Arial", 14, "bold")
         )
-        email_title.pack(pady=(5, 5))
-        
+        email_title.grid(row=0, column=0, pady=(5, 5), sticky="ew")
+
         # Email input frame
         email_input_frame = customtkinter.CTkFrame(master=email_section)
-        email_input_frame.pack(pady=5, fill="x", padx=5)
-        
+        email_input_frame.grid(row=1, column=0, pady=5, padx=5, sticky="ew")
+        email_input_frame.columnconfigure(0, weight=1)
+
         self.email_entry = customtkinter.CTkEntry(
             master=email_input_frame,
             placeholder_text="Enter email address",
-            width=200,
             font=("Arial", 12)
         )
-        self.email_entry.pack(side="left", padx=5, fill="x", expand=True)
-        
+        self.email_entry.grid(row=0, column=0, padx=5, sticky="ew")
+
         add_email_button = customtkinter.CTkButton(
             master=email_input_frame,
             text="➕ Add",
@@ -207,31 +221,31 @@ class SteamDealsUI:
             font=("Arial", 12, "bold"),
             fg_color="#28a745"
         )
-        add_email_button.pack(side="left", padx=5)
-        
+        add_email_button.grid(row=0, column=1, padx=5, sticky="e")
+
         # Email list frame (scrollable)
         self.email_list_frame = customtkinter.CTkScrollableFrame(
             master=email_section,
-            height=100,
             label_text="Recipients List"
         )
-        self.email_list_frame.pack(pady=5, padx=5, fill="both", expand=True)
-        
+        self.email_list_frame.grid(row=2, column=0, pady=5, padx=5, sticky="nsew")
+
         # Time input section
         time_frame = customtkinter.CTkFrame(master=right_scheduler)
-        time_frame.pack(pady=10)
-        
+        time_frame.grid(row=3, column=0, pady=10, padx=10, sticky="ew")
+        time_frame.columnconfigure(0, weight=1)
+
         time_label = customtkinter.CTkLabel(
             master=time_frame,
             text="Set Time (HH:MM):",
             font=("Arial", 14)
         )
-        time_label.pack(pady=5)
-        
+        time_label.grid(row=0, column=0, pady=5, sticky="ew")
+
         # Hour and minute inputs
         time_input_frame = customtkinter.CTkFrame(master=time_frame)
-        time_input_frame.pack(pady=5)
-        
+        time_input_frame.grid(row=1, column=0, pady=5)
+
         self.hour_entry = customtkinter.CTkEntry(
             master=time_input_frame,
             placeholder_text="HH",
@@ -260,13 +274,12 @@ class SteamDealsUI:
             master=right_scheduler,
             text="✅ Activate",
             command=self.toggle_schedule,
-            width=200,
             height=50,
             font=("Arial", 18, "bold"),
             fg_color="#28a745"
         )
-        self.schedule_toggle_button.pack(pady=15)
-        
+        self.schedule_toggle_button.grid(row=4, column=0, pady=15, padx=10, sticky="ew")
+
         # Schedule status label
         self.schedule_status_label = customtkinter.CTkLabel(
             master=right_scheduler,
@@ -274,16 +287,16 @@ class SteamDealsUI:
             font=("Arial", 12),
             text_color="gray"
         )
-        self.schedule_status_label.pack(pady=10)
-        
+        self.schedule_status_label.grid(row=5, column=0, pady=10, sticky="ew")
+
         # Status label (at bottom of main frame)
         self.status_label = customtkinter.CTkLabel(
             master=main_frame,
             text="Ready to search Steam deals",
             font=("Arial", 14)
         )
-        self.status_label.pack(pady=10)
-    
+        self.status_label.grid(row=3, column=0, pady=10, sticky="ew")
+
     def update_discount_value(self, value):
         """Update the discount percentage display"""
         self.min_discount = int(value)
@@ -350,12 +363,12 @@ class SteamDealsUI:
                 font=("Arial", 11),
                 text_color="gray"
             )
-            no_emails_label.pack(pady=10)
+            no_emails_label.pack(pady=10, fill="x")
         else:
             for email in self.email_recipients:
                 email_frame = customtkinter.CTkFrame(master=self.email_list_frame)
-                email_frame.pack(pady=3, padx=5, fill="x")
-                
+                email_frame.pack(pady=3, padx=5, fill="x", expand=True)
+
                 email_label = customtkinter.CTkLabel(
                     master=email_frame,
                     text=email,
@@ -425,21 +438,22 @@ class SteamDealsUI:
         """Create a UI entry for a single game"""
         # Game frame
         game_frame = customtkinter.CTkFrame(master=self.results_frame)
-        game_frame.pack(pady=5, padx=10, fill="x")
-        
+        game_frame.pack(pady=5, padx=10, fill="both", expand=True)
+
         # Game title
         title_label = customtkinter.CTkLabel(
             master=game_frame,
             text=game['title'],
             font=("Arial", 16, "bold"),
-            anchor="w"
+            anchor="w",
+            wraplength=600
         )
-        title_label.pack(pady=(10, 5), padx=15, anchor="w")
-        
+        title_label.pack(pady=(10, 5), padx=15, anchor="w", fill="x")
+
         # Game info frame
         info_frame = customtkinter.CTkFrame(master=game_frame)
-        info_frame.pack(pady=5, padx=15, fill="x")
-        
+        info_frame.pack(pady=5, padx=15, fill="x", expand=True)
+
         # Discount percentage
         discount_label = customtkinter.CTkLabel(
             master=info_frame,
@@ -462,8 +476,8 @@ class SteamDealsUI:
             text=price_text,
             font=("Arial", 12)
         )
-        price_label.pack(side="left", padx=10)
-        
+        price_label.pack(side="left", padx=10, fill="x", expand=True)
+
         # Steam link button
         steam_button = customtkinter.CTkButton(
             master=game_frame,
@@ -717,4 +731,3 @@ class SteamDealsUI:
 if __name__ == "__main__":
     app = SteamDealsUI()
     app.run()
-
